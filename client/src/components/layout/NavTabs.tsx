@@ -19,7 +19,7 @@ interface IProps {
 export const NavTabs = ({ items, pathname, onNavigate }: IProps) => (
   <Stack direction="row" spacing={1}>
     {items.map((item) => {
-      const active = pathname.startsWith(item.to);
+      const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
 
       return (
         <Button
