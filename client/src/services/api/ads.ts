@@ -56,6 +56,27 @@ export const adsApi = {
     const response = await apiClient.get<Advertisement>(`/ads/${id}`, { signal });
     return response.data;
   },
+  /**
+   * Одобрить объявление
+   */
+  approveAd: async (id: number) => {
+    const response = await apiClient.post(`/ads/${id}/approve`);
+    return response.data;
+  },
+  /**
+   * Отклонить объявление
+   */
+  rejectAd: async (id: number, payload: { reason: string; comment?: string }) => {
+    const response = await apiClient.post(`/ads/${id}/reject`, payload);
+    return response.data;
+  },
+  /**
+   * Запросить изменения
+   */
+  requestChanges: async (id: number, payload: { reason: string; comment?: string }) => {
+    const response = await apiClient.post(`/ads/${id}/request-changes`, payload);
+    return response.data;
+  },
 };
 
 
@@ -66,3 +87,26 @@ export const fetchAds = async (
   filters: ListFilters,
   signal?: AbortSignal,
 ): Promise<AdsListResponse> => adsApi.getAds(filters, signal);
+
+/**
+ * Получить объявление по ID
+ */
+export const fetchAdById = async (id: number, signal?: AbortSignal) =>
+  adsApi.getAdById(id, signal);
+
+/**
+ * Одобрить объявление
+ */
+export const approveAd = async (id: number) => adsApi.approveAd(id);
+
+/**
+ * Отклонить объявление
+ */
+export const rejectAd = async (id: number, reason: string, comment?: string) =>
+  adsApi.rejectAd(id, { reason, comment });
+
+/**
+ * Отправить запрос на изменения
+ */
+export const requestChanges = async (id: number, reason: string, comment?: string) =>
+  adsApi.requestChanges(id, { reason, comment });
