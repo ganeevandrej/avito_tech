@@ -1,6 +1,6 @@
 const generateMockAds = (count) => {
   const categories = ['Электроника', 'Недвижимость', 'Транспорт', 'Работа', 'Услуги', 'Животные', 'Мода', 'Детское'];
-  const statuses = ['pending', 'approved', 'rejected'];
+  const statuses = ['pending', 'approved', 'rejected', 'draft'];
   const priorities = ['normal', 'urgent'];
   const rejectionReasons = ['Запрещенный товар', 'Неверная категория', 'Некорректное описание', 'Проблемы с фото', 'Подозрение на мошенничество', 'Другое'];
   
