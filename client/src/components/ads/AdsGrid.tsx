@@ -32,7 +32,7 @@ export const AdsGrid = ({ ads, isLoading, totalItems }: IProps) => {
 
   return (
     <Box>
-      {totalItems && (
+      {Boolean(totalItems) && (
         <Typography variant="subtitle2" color="text.secondary" mb={1}>
           Найдено объявлений: {totalItems}
         </Typography>

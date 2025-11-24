@@ -1,4 +1,4 @@
-import { Bolt as BoltIcon} from '@mui/icons-material';
+import { Bolt as BoltIcon } from '@mui/icons-material';
 import {
   Box,
   Button,
