@@ -14,7 +14,7 @@ import { type AdsListResponse } from '@/types/ad';
 /**
  * Страница списка объявлений
  */
-export const ListPage = () => {
+const ListPage = () => {
   const filters = useAppSelector(selectFilters);
   const dispatch = useAppDispatch();
 
@@ -50,3 +50,5 @@ export const ListPage = () => {
     </Stack>
   );
 };
+
+export default ListPage;

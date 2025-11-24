@@ -15,7 +15,7 @@ import { fetchAdById } from '@/services/api/ads';
 /**
  * Страница детальной информации об объявлении
  */
-export const ItemPage = () => {
+const ItemPage = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = Number(id);
 
@@ -70,3 +70,5 @@ export const ItemPage = () => {
     </Stack>
   );
 };
+
+export default ItemPage;

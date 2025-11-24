@@ -1,16 +1,46 @@
-import { Route,Routes } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import { MainLayout } from '@/components/layout/MainLayout';
+import { PageLoader } from '@/components/common/PageLoader';
 import { ItemPage, ListPage, StatsPage } from '@/pages';
 
 export const App = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<ListPage />} />
-        <Route path="list" element={<ListPage />} />
-        <Route path="item/:id" element={<ItemPage />} />
-        <Route path="stats" element={<StatsPage />} />
+        <Route
+          index
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ListPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="list"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ListPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="item/:id"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ItemPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="stats"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <StatsPage />
+            </Suspense>
+          }
+        />
       </Route>
     </Routes>
   );
