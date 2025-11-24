@@ -1,10 +1,16 @@
 import { type AdStatus } from '@/types/ad';
 
+/**
+ * Список лейблов для отображения приоритетов
+ */
 export const PRIORITY_LABELS: Record<string, string> = {
   normal: 'Обычный',
   urgent: 'Срочный',
 };
 
+/**
+ * Список лейблов для отображения статусов
+ */
 export const STATUS_LABELS: Record<AdStatus, string> = {
   pending: 'На модерации',
   approved: 'Одобрено',
@@ -34,5 +40,14 @@ export const CATEGORIES = [
   'Животные',
   'Мода',
   'Детское',
+];
+
+/**
+ * Список опций сортировки
+ */
+export const SORT_OPTIONS = [
+  { value: 'createdAt', label: 'По дате создания' },
+  { value: 'price', label: 'По цене' },
+  { value: 'priority', label: 'По приоритету' },
 ];
 

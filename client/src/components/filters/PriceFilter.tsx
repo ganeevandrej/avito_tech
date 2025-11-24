@@ -32,17 +32,19 @@ export const PriceFilter = ({
       <TextField
         type="number"
         label="Цена от"
+        size="small"
         value={minPrice ?? ''}
         onChange={handleMinPriceChange}
-        inputProps={{ min: 0, step: 10 }}
+        inputProps={{ min: 0, step: 100 }}
         sx={{ flex: 1 }}
       />
       <TextField
         type="number"
         label="Цена до"
+        size="small"
         value={maxPrice ?? ''}
         onChange={handleMaxPriceChange}
-        inputProps={{ min: 0, step: 10 }}
+        inputProps={{ min: minPrice, step: 100 }}
         sx={{ flex: 1 }}
       />
     </Stack>

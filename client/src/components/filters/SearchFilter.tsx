@@ -14,6 +14,7 @@ export const SearchFilter = ({ value, onChange }: IProps) => {
     <TextField
       fullWidth
       label="Поиск по названию"
+      size="small"
       value={value}
       onChange={(event) => onChange(event.target.value)}
       InputProps={{

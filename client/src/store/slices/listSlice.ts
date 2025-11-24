@@ -2,6 +2,11 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { type AdStatus } from '@/types/ad';
 
+export type SortField = 'createdAt' | 'price' | 'priority';
+export type SortOrder = 'asc' | 'desc';
+
+const ITEMS_PER_PAGE = 10;
+
 /**
  * Интерфейс фильтров для списка объявлений
  */
@@ -11,6 +16,10 @@ export interface ListFilters {
   minPrice: number | null;
   maxPrice: number | null;
   search: string;
+  sortBy: SortField;
+  sortOrder: SortOrder;
+  page: number;
+  limit: number;
 }
 
 /**
@@ -22,6 +31,10 @@ const defaultFilters: ListFilters = {
   minPrice: null,
   maxPrice: null,
   search: '',
+  sortBy: 'createdAt',
+  sortOrder: 'desc',
+  page: 1,
+  limit: ITEMS_PER_PAGE,
 };
 
 interface ListState {
@@ -40,23 +53,42 @@ const listSlice = createSlice({
   name: 'list',
   initialState,
   reducers: {
+    /**
+     * Установка фильтров
+     */
     setFilters(state, action: PayloadAction<Partial<ListFilters>>) {
       state.filters = {
         ...state.filters,
         ...action.payload,
+        page: action.payload.page ?? 1,
       };
     },
+
+    /**
+     * Сброс фильтров
+     */
     resetFilters(state) {
       state.filters = { ...defaultFilters };
       state.selectedIds = [];
     },
+
+    /**
+     * Установка последних загруженных идентификаторов
+     */
     setLastLoadedIds(state, action: PayloadAction<number[]>) {
       state.lastLoadedIds = action.payload;
+    },
+
+    /**
+     * Установка текущей страницы
+     */
+    setPage(state, action: PayloadAction<number>) {
+      state.filters.page = action.payload;
     },
   },
 });
 
-export const { setFilters, resetFilters, setLastLoadedIds } = listSlice.actions;
+export const { setFilters, resetFilters, setLastLoadedIds, setPage } = listSlice.actions;
 export const defaultListFilters = defaultFilters;
 export default listSlice.reducer;
 

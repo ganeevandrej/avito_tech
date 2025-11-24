@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { AdsGrid } from '@/components/ads/AdsGrid';
+import { AdsPagination } from '@/components/ads/AdsPagination';
 import { FiltersPanel } from '@/components/filters/FiltersPanel';
 import { fetchAds } from '@/services/api/ads';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -30,6 +31,9 @@ export const ListPage = () => {
     dispatch(setLastLoadedIds(adsQuery.data.ads.map((ad) => ad.id)));
   }, [adsQuery.data, dispatch]);
 
+  const shouldShowPagination =
+    Boolean(adsQuery.data?.pagination) && adsQuery.data!.pagination.totalPages > 1;
+
   return (
     <Stack spacing={3}>
       <FiltersPanel />
@@ -39,6 +43,10 @@ export const ListPage = () => {
         isLoading={isLoading}
         totalItems={adsQuery.data?.pagination.totalItems}
       />
+
+      {shouldShowPagination && (
+        <AdsPagination pagination={adsQuery.data!.pagination} isLoading={isLoading} />
+      )}
     </Stack>
   );
 };

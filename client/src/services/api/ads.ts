@@ -9,7 +9,12 @@ type QueryParamsValue = string | number | string[];
  * Нормализация параметров фильтров для API запроса
  */
 const normalizeParams = (filters: ListFilters): Record<string, QueryParamsValue> => {
-  const params: Record<string, QueryParamsValue> = {};
+  const params: Record<string, QueryParamsValue> = {
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    sortOrder: filters.sortOrder,
+  };
 
   if (filters.search) {
     params.search = filters.search;
@@ -53,7 +58,11 @@ export const adsApi = {
   },
 };
 
+
+/**
+ * Запрос списка объявлений
+ */
 export const fetchAds = async (
   filters: ListFilters,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<AdsListResponse> => adsApi.getAds(filters, signal);

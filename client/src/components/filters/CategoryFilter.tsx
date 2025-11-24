@@ -30,6 +30,7 @@ export const CategoryFilter = ({ value, onChange }: IProps) => {
         <Select
           value={value !== null ? String(value) : ''}
           label="Категория"
+          size="small"
           onChange={handleChange}
         >
           <MenuItem value="">Все категории</MenuItem>

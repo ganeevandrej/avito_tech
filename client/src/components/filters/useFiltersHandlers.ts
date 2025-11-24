@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectFilters } from '@/store/slices/listSelectors';
+import type { ListFilters } from '@/store/slices/listSlice';
 import { resetFilters, setFilters } from '@/store/slices/listSlice';
 import { type AdStatus } from '@/types/ad';
 
@@ -14,7 +15,7 @@ export const useFiltersHandlers = () => {
   const [searchValue, setSearchValue] = useState(filters.search);
   const dispatch = useAppDispatch();
 
-  const debouncedSearch = useDebounce(searchValue, 500);
+  const debouncedSearch = useDebounce(searchValue, 1000);
 
   /**
    * Применение debounced значения поиска к фильтрам
@@ -66,6 +67,26 @@ export const useFiltersHandlers = () => {
   );
 
   /**
+   * Обработчик изменения сортировки по полю
+   */
+  const handleSortByChange = useCallback(
+    (value: ListFilters['sortBy']) => {
+      dispatch(setFilters({ sortBy: value }));
+    },
+    [dispatch],
+  );
+
+  /**
+   * Обработчик изменения сортировки по порядку
+   */
+  const handleSortOrderChange = useCallback(
+    (value: ListFilters['sortOrder']) => {
+      dispatch(setFilters({ sortOrder: value }));
+    },
+    [dispatch],
+  );
+
+  /**
    * Сброс всех фильтров к значениям по умолчанию
    */
   const handleReset = useCallback(() => {
@@ -81,6 +102,8 @@ export const useFiltersHandlers = () => {
     handleCategoryChange,
     handleMinPriceChange,
     handleMaxPriceChange,
+    handleSortByChange,
+    handleSortOrderChange,
     handleReset,
   };
 };
