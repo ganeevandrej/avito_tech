@@ -1,25 +1,40 @@
-import { type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-interface MainLayoutProps {
-  children: ReactNode;
-}
+import { NAV_ITEMS } from '@/shared/constants/navigation';
 
-export const MainLayout = ({ children }: MainLayoutProps) => {
+import { NavTabs } from './NavTabs';
+
+/**
+ * Основной layout приложения
+ */
+export const MainLayout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <header>
-        <div>
-          <h1>Система модерации объявлений</h1>
-          <nav>
-            <Link to="/list">Список объявлений</Link>
-            <Link to="/stats">Статистика</Link>
-          </nav>
-        </div>
-      </header>
-      <main>
-        <div>{children}</div>
-      </main>
-    </div>
+    <Box minHeight="100vh" display="flex" flexDirection="column">
+      <AppBar position="sticky" color="default">
+        <Toolbar sx={{ gap: 2 }}>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            sx={{ cursor: 'pointer' }}
+            onClick={() => navigate('/list')}
+          >
+            Авито · Модерация
+          </Typography>
+          <NavTabs
+            items={NAV_ITEMS}
+            pathname={location.pathname}
+            onNavigate={(path) => navigate(path)}
+          />
+          <Box flexGrow={1} />
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="xl" sx={{ py: 4, flexGrow: 1 }}>
+        <Outlet />
+      </Container>
+    </Box>
   );
 };
