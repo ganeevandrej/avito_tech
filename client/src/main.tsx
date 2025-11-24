@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import { App } from '@/App';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { ErrorBoundary } from '@/components/common';
 import { QueryProvider, ReduxProvider, ThemeProvider } from '@/providers';
 
 const basename = import.meta.env.VITE_BASE_URL || '/';

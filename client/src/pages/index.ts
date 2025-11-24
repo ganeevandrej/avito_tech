@@ -1,3 +1,5 @@
-export { ItemPage } from './ItemPage';
-export { ListPage } from './ListPage';
-export { StatsPage } from './StatsPage';
+import { lazy } from 'react';
+
+export const ListPage = lazy(() => import('./ListPage'));
+export const ItemPage = lazy(() => import('./ItemPage'));
+export const StatsPage = lazy(() => import('./StatsPage'));

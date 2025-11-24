@@ -8,11 +8,12 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { MODERATION_REASONS } from '@/shared/constants/moderation';
-import type { ModerationPayload } from './useModerationActions';
+
 import type { DialogMode } from './ModerationButtons';
+import type { ModerationPayload } from './useModerationActions';
 
 interface IProps {
   open: boolean;

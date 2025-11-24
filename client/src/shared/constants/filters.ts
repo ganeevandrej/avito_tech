@@ -22,10 +22,10 @@ export const STATUS_LABELS: Record<AdStatus, string> = {
  * Список статусов для фильтрации
  */
 export const STATUSES: { value: AdStatus; label: string }[] = [
-  { value: 'pending', label: 'На модерации' },
-  { value: 'approved', label: 'Одобрено' },
-  { value: 'rejected', label: 'Отклонено' },
-  { value: 'draft', label: 'Черновик' },
+  { value: 'pending', label: STATUS_LABELS.pending },
+  { value: 'approved', label: STATUS_LABELS.approved },
+  { value: 'rejected', label: STATUS_LABELS.rejected },
+  { value: 'draft', label: STATUS_LABELS.draft },
 ];
 
 /**

@@ -3,7 +3,7 @@ import { Button, Stack } from '@mui/material';
 import { useState } from 'react';
 
 import { ModerationReasonDialog } from './ModerationReasonDialog';
-import { useModerationActions, type ModerationPayload } from './useModerationActions';
+import { type ModerationPayload, useModerationActions } from './useModerationActions';
 
 interface IProps {
   adId: number;
