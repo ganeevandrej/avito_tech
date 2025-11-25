@@ -35,7 +35,7 @@ export const SortFilter = ({
   };
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flex={1}>
+    <Stack direction="row" spacing={2} flex={1}>
       <FormControl fullWidth>
         <InputLabel id="sort-filter-label">Сортировка</InputLabel>
         <Select

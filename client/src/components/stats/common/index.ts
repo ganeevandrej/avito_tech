@@ -1,0 +1,2 @@
+export { StatsPageSkeleton } from './StatsPageSkeleton';
+

@@ -51,3 +51,12 @@ export const SORT_OPTIONS = [
   { value: 'priority', label: 'По приоритету' },
 ];
 
+/**
+ * Цвета чипов для статусов объявлений
+ */
+export const STATUS_CHIP_COLORS: Record<string, 'success' | 'error' | 'default' | 'warning'> = {
+  approved: 'success',
+  rejected: 'error',
+  draft: 'default',
+};
+

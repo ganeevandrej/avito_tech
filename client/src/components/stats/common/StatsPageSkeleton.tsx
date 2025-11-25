@@ -76,3 +76,4 @@ const ChartsContainer = styled(Box)(({ theme }) => ({
     gridTemplateColumns: '2fr 1fr',
   },
 }));
+

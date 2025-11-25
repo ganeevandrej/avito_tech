@@ -1,0 +1,2 @@
+export { AdsPagination } from './AdsPagination';
+

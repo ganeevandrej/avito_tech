@@ -7,8 +7,7 @@ import { selectSelectedIds } from '@/store/slices/listSelectors';
 import { toggleSelection } from '@/store/slices/listSlice';
 import { type Advertisement } from '@/types/ad';
 
-import { AdCard } from './AdCard';
-import { AdCardSkeleton } from './AdCardSkeleton';
+import { AdCard, AdCardSkeleton } from '../AdCard';
 
 interface IProps {
   ads: Advertisement[];
@@ -68,3 +67,4 @@ export const AdsGrid = ({ ads, isLoading, totalItems }: IProps) => {
     </Box>
   );
 };
+

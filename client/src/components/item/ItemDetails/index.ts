@@ -1,0 +1,2 @@
+export { ItemDetailsCard } from './ItemDetailsCard';
+

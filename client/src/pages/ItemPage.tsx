@@ -1,26 +1,30 @@
-import { Box, CircularProgress, Stack } from '@mui/material';
+import { Box, Chip, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
+import type { ModerationActionsRef } from '@/components/item';
 import {
   HistoryCard,
   ItemDetailsCard,
   ItemGalleryCard,
+  ItemPageSkeleton,
   ModerationActions,
   NotFoundError,
 } from '@/components/item';
-import type { ModerationActionsRef } from '@/components/item/useModerationActions';
 import { fetchAdById } from '@/services/api/ads';
+import { STATUS_LABELS } from '@/shared/constants/filters';
+import { formatDate } from '@/shared/utils/format';
 
 /**
  * Страница детальной информации об объявлении
  */
 const ItemPage = () => {
   const { id } = useParams<{ id: string }>();
-  const numericId = Number(id);
   const moderationActionsRef = useRef<ModerationActionsRef | null>(null);
+
+  const numericId = Number(id);
 
   const adQuery = useQuery({
     queryKey: ['ad', numericId],
@@ -84,11 +88,7 @@ const ItemPage = () => {
   }
 
   if (adQuery.isLoading) {
-    return (
-      <Box textAlign="center" py={8}>
-        <CircularProgress />
-      </Box>
-    );
+    return <ItemPageSkeleton />;
   }
 
   if (adQuery.isError) {
@@ -108,18 +108,34 @@ const ItemPage = () => {
 
   const ad = adQuery.data;
 
+  const isUrgent = ad.priority === 'urgent';
+
   return (
-    <Stack spacing={3}>
-      {/* Галерея и история модерации */}
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
-        <ItemGalleryCard images={ad.images} />
-        <HistoryCard history={ad.moderationHistory} />
+    <Stack spacing={4}>
+      <Stack spacing={1}>
+        <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+          <Typography variant="h4" fontWeight={700}>
+            {ad.title}
+          </Typography>
+          {isUrgent && <Chip label="Срочно" color="error" size="small" />}
+          <Chip label={STATUS_LABELS[ad.status]} color="primary" size="small" variant="outlined" />
+        </Stack>
+        <Typography variant="body2" color="text.secondary">
+          Объявление #{ad.id} · обновлено {formatDate(ad.updatedAt)}
+        </Typography>
       </Stack>
 
-      {/* Детальная информация об объявлении */}
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
+        <Box flex={1}>
+          <ItemGalleryCard images={ad.images} />
+        </Box>
+        <Box flex={1}>
+          <HistoryCard history={ad.moderationHistory} />
+        </Box>
+      </Stack>
+
       <ItemDetailsCard ad={ad} />
 
-      {/* Действия модерации */}
       <ModerationActions adId={numericId} actionsRef={moderationActionsRef} />
     </Stack>
   );

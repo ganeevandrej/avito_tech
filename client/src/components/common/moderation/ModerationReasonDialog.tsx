@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import type { ModerationPayload } from '@/components/item/useModerationActions';
+import type { ModerationPayload } from '@/components/item';
 import { MODERATION_REASONS } from '@/shared/constants/moderation';
 import type { DialogMode } from '@/shared/constants/moderationActions';
 

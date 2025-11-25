@@ -6,6 +6,7 @@ export type SortField = 'createdAt' | 'price' | 'priority';
 export type SortOrder = 'asc' | 'desc';
 
 const ITEMS_PER_PAGE = 10;
+const LAST_LOADED_IDS_KEY = 'lastLoadedIds';
 
 /**
  * Интерфейс фильтров для списка объявлений
@@ -43,10 +44,19 @@ interface ListState {
   lastLoadedIds: number[];
 }
 
+const getStoredLastLoadedIds = (): number[] => {
+  try {
+    const stored = sessionStorage.getItem(LAST_LOADED_IDS_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
 const initialState: ListState = {
   filters: defaultFilters,
   selectedIds: [],
-  lastLoadedIds: [],
+  lastLoadedIds: getStoredLastLoadedIds(),
 };
 
 const listSlice = createSlice({
@@ -77,6 +87,7 @@ const listSlice = createSlice({
      */
     setLastLoadedIds(state, action: PayloadAction<number[]>) {
       state.lastLoadedIds = action.payload;
+      sessionStorage.setItem(LAST_LOADED_IDS_KEY, JSON.stringify(action.payload));
     },
 
     /**
@@ -92,7 +103,7 @@ const listSlice = createSlice({
     toggleSelection(state, action: PayloadAction<number>) {
       const id = action.payload;
       const index = state.selectedIds.indexOf(id);
-      
+
       if (index === -1) {
         state.selectedIds.push(id);
       } else {

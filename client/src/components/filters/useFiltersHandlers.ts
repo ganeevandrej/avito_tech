@@ -29,17 +29,13 @@ export const useFiltersHandlers = () => {
   }, [debouncedSearch, dispatch, filters.search]);
 
   /**
-   * Обработчик переключения статуса в фильтрах
+   * Обработчик изменения набора статусов в фильтрах
    */
-  const handleStatusToggle = useCallback(
-    (status: AdStatus) => {
-      const next = filters.status.includes(status)
-        ? filters.status.filter((item) => item !== status)
-        : [...filters.status, status];
-
-      dispatch(setFilters({ status: next }));
+  const handleStatusesChange = useCallback(
+    (statuses: AdStatus[]) => {
+      dispatch(setFilters({ status: statuses }));
     },
-    [filters.status, dispatch],
+    [dispatch],
   );
 
   /**
@@ -98,7 +94,7 @@ export const useFiltersHandlers = () => {
     filters,
     searchValue,
     setSearchValue,
-    handleStatusToggle,
+    handleStatusesChange,
     handleCategoryChange,
     handleMinPriceChange,
     handleMaxPriceChange,

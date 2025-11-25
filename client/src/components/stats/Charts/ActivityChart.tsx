@@ -84,3 +84,4 @@ const EmptyState = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   color: theme.palette.text.secondary,
 }));
+
