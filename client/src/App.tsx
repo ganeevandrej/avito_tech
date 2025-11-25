@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { MainLayout } from '@/components/layout/MainLayout';
 import { PageLoader } from '@/components/common/PageLoader';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { ItemPage, ListPage, StatsPage } from '@/pages';
 
 export const App = () => {

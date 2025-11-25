@@ -1,31 +1,26 @@
-import { Check as CheckIcon, Close as CloseIcon, Replay as ReplayIcon } from '@mui/icons-material';
-import { Button, Stack } from '@mui/material';
-import { useState } from 'react';
+import { Button, type ButtonProps, Stack } from '@mui/material';
+import { Fragment, useState } from 'react';
 
-import { ModerationReasonDialog } from './ModerationReasonDialog';
-import { type ModerationPayload, useModerationActions } from './useModerationActions';
+import { ModerationReasonDialog } from '@/components/common';
+import type { DialogMode, ModerationActionConfig } from '@/shared/constants/moderationActions';
+import { MODERATION_ACTIONS } from '@/shared/constants/moderationActions';
+
+import {
+  type ModerationButtonActionKey,
+  type ModerationPayload,
+  useModerationActions,
+} from './useModerationActions';
 
 interface IProps {
   adId: number;
 }
 
-export type DialogMode = 'reject' | 'changes' | null;
-
 export const ModerationButtons = ({ adId }: IProps) => {
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
 
-  const openDialog = (mode: DialogMode) => {
-    setDialogMode(mode);
-  };
-
-  const {
-    handleApprove,
-    handleReject,
-    handleRequestChanges,
-    isApproving,
-    isRejecting,
-    isRequestingChanges,
-  } = useModerationActions(adId);
+  const { actionStateMap, handleReject, handleRequestChanges } = useModerationActions(adId, {
+    onOpenDialog: setDialogMode,
+  });
 
   const handleDialogSubmit = (payload: ModerationPayload) => {
     if (dialogMode === 'reject') {
@@ -33,38 +28,39 @@ export const ModerationButtons = ({ adId }: IProps) => {
     } else if (dialogMode === 'changes') {
       handleRequestChanges(payload);
     }
+
     setDialogMode(null);
   };
+
+  const renderButton = (config: ModerationActionConfig) => {
+    const state = actionStateMap[config.key as ModerationButtonActionKey];
+
+    if (!state) {
+      return null;
+    }
+
+    return (
+      <Button
+        key={config.key}
+        variant={config.key === 'approve' ? 'contained' : 'outlined'}
+        color={config.color as ButtonProps['color']}
+        startIcon={config.icon}
+        disabled={state.disabled}
+        onClick={state.handler}
+      >
+        {config.label}
+      </Button>
+    );
+  };
+
+  const buttonActions = MODERATION_ACTIONS.filter((action) => action.key !== 'clear');
 
   return (
     <>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleApprove}
-          disabled={isApproving}
-          startIcon={<CheckIcon />}
-        >
-          Одобрить
-        </Button>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => openDialog('reject')}
-          disabled={isRejecting}
-          startIcon={<CloseIcon />}
-        >
-          Отклонить
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => openDialog('changes')}
-          disabled={isRequestingChanges}
-          startIcon={<ReplayIcon />}
-        >
-          Доработка
-        </Button>
+        {buttonActions.map((button) => (
+          <Fragment key={button.key}>{renderButton(button)}</Fragment>
+        ))}
       </Stack>
       <ModerationReasonDialog
         mode={dialogMode}
@@ -75,4 +71,3 @@ export const ModerationButtons = ({ adId }: IProps) => {
     </>
   );
 };
-

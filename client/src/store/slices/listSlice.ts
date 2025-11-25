@@ -85,10 +85,46 @@ const listSlice = createSlice({
     setPage(state, action: PayloadAction<number>) {
       state.filters.page = action.payload;
     },
+
+    /**
+     * Переключение выбора объявления
+     */
+    toggleSelection(state, action: PayloadAction<number>) {
+      const id = action.payload;
+      const index = state.selectedIds.indexOf(id);
+      
+      if (index === -1) {
+        state.selectedIds.push(id);
+      } else {
+        state.selectedIds.splice(index, 1);
+      }
+    },
+
+    /**
+     * Снять выбор со всех объявлений
+     */
+    clearSelection(state) {
+      state.selectedIds = [];
+    },
+
+    /**
+     * Установить выбранные ID
+     */
+    setSelectedIds(state, action: PayloadAction<number[]>) {
+      state.selectedIds = action.payload;
+    },
   },
 });
 
-export const { setFilters, resetFilters, setLastLoadedIds, setPage } = listSlice.actions;
+export const {
+  setFilters,
+  resetFilters,
+  setLastLoadedIds,
+  setPage,
+  toggleSelection,
+  clearSelection,
+  setSelectedIds,
+} = listSlice.actions;
 export const defaultListFilters = defaultFilters;
 export default listSlice.reducer;
 

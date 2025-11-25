@@ -1,8 +1,10 @@
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import { SKELETON_COUNT } from '@/shared/constants/list';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectSelectedIds } from '@/store/slices/listSelectors';
+import { toggleSelection } from '@/store/slices/listSlice';
 import { type Advertisement } from '@/types/ad';
 
 import { AdCard } from './AdCard';
@@ -19,9 +21,16 @@ interface IProps {
  */
 export const AdsGrid = ({ ads, isLoading, totalItems }: IProps) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const selectedIds = useAppSelector(selectSelectedIds);
 
   const handleOpen = (id: number) => {
     navigate(`/item/${id}`);
+  };
+
+  const handleSelect = (id: number) => {
+    dispatch(toggleSelection(id));
   };
 
   const defaultEmptyState = () => (
@@ -37,28 +46,25 @@ export const AdsGrid = ({ ads, isLoading, totalItems }: IProps) => {
           Найдено объявлений: {totalItems}
         </Typography>
       )}
-      <GridContainer>
+
+      <Stack gap={2}>
         {isLoading &&
           Array.from({ length: SKELETON_COUNT }).map((_, index) => (
             <AdCardSkeleton key={`skeleton-${index}`} />
           ))}
         {ads.map((ad, index) => (
-          <AdCard key={ad.id} ad={ad} index={index} onOpen={() => handleOpen(ad.id)} />
+          <AdCard
+            key={ad.id}
+            ad={ad}
+            index={index}
+            onOpen={() => handleOpen(ad.id)}
+            selected={selectedIds.includes(ad.id)}
+            onSelect={handleSelect}
+          />
         ))}
-      </GridContainer>
+      </Stack>
+
       {!isLoading && !ads.length && defaultEmptyState()}
     </Box>
   );
 };
-
-const GridContainer = styled(Box)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: theme.spacing(2),
-  [theme.breakpoints.up('sm')]: {
-    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  },
-  [theme.breakpoints.up('lg')]: {
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-  },
-}));

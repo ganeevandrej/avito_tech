@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { AdsGrid } from '@/components/ads/AdsGrid';
 import { AdsPagination } from '@/components/ads/AdsPagination';
+import { BulkActions } from '@/components/ads/BulkActions';
 import { FiltersPanel } from '@/components/filters/FiltersPanel';
 import { fetchAds } from '@/services/api/ads';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -36,14 +37,20 @@ const ListPage = () => {
 
   return (
     <Stack spacing={3}>
+      {/* Фильтры */}
       <FiltersPanel />
 
+      {/* Список объявлений */}
       <AdsGrid
         ads={adsQuery.data?.ads ?? []}
         isLoading={isLoading}
         totalItems={adsQuery.data?.pagination.totalItems}
       />
 
+      {/* Массовые действия */}
+      <BulkActions />
+
+      {/* Пагинация */}
       {shouldShowPagination && (
         <AdsPagination pagination={adsQuery.data!.pagination} isLoading={isLoading} />
       )}
