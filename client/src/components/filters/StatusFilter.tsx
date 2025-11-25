@@ -1,35 +1,56 @@
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 import { STATUSES } from '@/shared/constants/filters';
 import { type AdStatus } from '@/types/ad';
 
 interface IProps {
   selected: AdStatus[];
-  onToggle: (status: AdStatus) => void;
+  onChange: (statuses: AdStatus[]) => void;
 }
 
 /**
  * Компонент фильтра по статусам объявлений
  */
-export const StatusFilter = ({ selected, onToggle }: IProps) => {
+export const StatusFilter = ({ selected, onChange }: IProps) => {
+  const handleChange = (event: SelectChangeEvent<AdStatus[]>) => {
+    onChange(event.target.value as AdStatus[]);
+  };
+
+  const renderValue = (values: AdStatus[]) => {
+    if (!values.length) {
+      return undefined;
+    }
+
+    return values
+      .map((value) => STATUSES.find((status) => status.value === value)?.label ?? value)
+      .join(', ');
+  };
+
   return (
-    <Box>
-      <Typography variant="subtitle2" gutterBottom>
-        Статусы
-      </Typography>
-      <Stack direction="row" gap={1} flexWrap="wrap">
+    <FormControl fullWidth size="small">
+      <InputLabel>Статусы</InputLabel>
+      <Select
+        multiple
+        value={selected}
+        label="Статусы"
+        onChange={handleChange}
+        renderValue={(values) => renderValue(values as AdStatus[])}
+      >
         {STATUSES.map((status) => (
-          <Chip
-            key={status.value}
-            label={status.label}
-            color={selected.includes(status.value) ? 'primary' : 'default'}
-            onClick={() => onToggle(status.value)}
-          />
+          <MenuItem key={status.value} value={status.value}>
+            <Checkbox size="small" checked={selected.includes(status.value)} />
+            <ListItemText primary={status.label} />
+          </MenuItem>
         ))}
-      </Stack>
-    </Box>
+      </Select>
+    </FormControl>
   );
 };
-
-
-

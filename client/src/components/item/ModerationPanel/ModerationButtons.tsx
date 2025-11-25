@@ -22,6 +22,9 @@ interface IProps {
   actionsRef?: React.RefObject<ModerationActionsRef | null>;
 }
 
+/**
+ * Компонент кнопок модерации
+ */
 export const ModerationButtons = ({ adId, actionsRef }: IProps) => {
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
 
@@ -58,7 +61,6 @@ export const ModerationButtons = ({ adId, actionsRef }: IProps) => {
       return null;
     }
 
-    // Добавляем подсказки с горячими клавишами из конфига
     const hotkeyHint = config.hotkey ? ` (${config.hotkey})` : '';
     const tooltipText = config.tooltip || '';
 
@@ -95,3 +97,4 @@ export const ModerationButtons = ({ adId, actionsRef }: IProps) => {
     </>
   );
 };
+

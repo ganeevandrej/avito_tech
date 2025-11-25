@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Fragment, useCallback, useMemo, useState } from 'react';
 
 import { ModerationReasonDialog } from '@/components/common';
-import type { ModerationPayload } from '@/components/item/useModerationActions';
+import type { ModerationPayload } from '@/components/item/ModerationPanel/useModerationActions';
 import { approveAd, rejectAd, requestChanges } from '@/services/api/ads';
 import {
   type DialogMode,
@@ -160,3 +160,4 @@ const SelectionCount = styled('span')(({ theme }) => ({
   color: theme.palette.text.primary,
   marginLeft: theme.spacing(0.5),
 }));
+

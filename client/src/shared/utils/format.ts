@@ -1,3 +1,5 @@
+import { STATUS_CHIP_COLORS } from '@/shared/constants/filters';
+
 /**
  * Форматирование валюты
  */
@@ -45,3 +47,8 @@ export const formatReviewTime = (totalSeconds: number): string => {
   return `${totalSeconds} сек`;
 };
 
+/**
+ * Получение цвета чипа статуса объявления
+ */
+export const getStatusChipColor = (status: string) =>
+  STATUS_CHIP_COLORS[status] ?? 'warning';

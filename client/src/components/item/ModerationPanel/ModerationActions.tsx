@@ -14,6 +14,9 @@ interface IProps {
   actionsRef?: React.RefObject<ModerationActionsRef | null>;
 }
 
+/**
+ * Компонент панели действий модерации
+ */
 export const ModerationActions = ({ adId, actionsRef }: IProps) => {
   const navigate = useNavigate();
   const lastLoadedIds = useAppSelector((state) => state.list.lastLoadedIds);
@@ -49,52 +52,66 @@ export const ModerationActions = ({ adId, actionsRef }: IProps) => {
   }, [actionsRef, handleNavigate, nextId, prevId]);
 
   return (
-    <StickyCard>
-      <ActionsLayout>
-        <Button
-          variant="text"
-          color="inherit"
-          startIcon={<ArrowBack />}
-          onClick={() => navigate('/list')}
-        >
-          К списку
-        </Button>
-        <ModerationButtons adId={adId} actionsRef={actionsRef} />
-        <Stack direction="row" spacing={1} alignItems="center">
+    <StickyWrapper>
+      <ActionCard>
+        <ActionsLayout>
           <Button
             variant="text"
             color="inherit"
-            disabled={!prevId}
-            onClick={() => handleNavigate(prevId)}
+            startIcon={<ArrowBack />}
+            onClick={() => navigate('/list')}
           >
-            ◀ Пред
+            К списку
           </Button>
-          <Typography variant="body1" color="text.secondary">|</Typography>
-          <Button
-            variant="text"
-            color="inherit"
-            disabled={!nextId}
-            onClick={() => handleNavigate(nextId)}
-          >
-            След ▶
-          </Button>
-        </Stack>
-      </ActionsLayout>
-    </StickyCard>
+          <ModerationButtons adId={adId} actionsRef={actionsRef} />
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Button
+              variant="text"
+              color="inherit"
+              disabled={!prevId}
+              onClick={() => handleNavigate(prevId)}
+            >
+              ◀ Пред
+            </Button>
+            <Typography variant="body1" color="text.secondary">|</Typography>
+            <Button
+              variant="text"
+              color="inherit"
+              disabled={!nextId}
+              onClick={() => handleNavigate(nextId)}
+            >
+              След ▶
+            </Button>
+          </Stack>
+        </ActionsLayout>
+      </ActionCard>
+    </StickyWrapper>
   );
 };
 
-const StickyCard = styled(Card)(({ theme }) => ({
-  zIndex: 1,
-  padding: theme.spacing(2),
+const StickyWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     position: 'sticky',
     bottom: theme.spacing(2),
+    zIndex: 10,
+  },
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
+const ActionCard = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(2.5),
+  boxShadow: theme.shadows[3],
+  width: '100%',
+  alignItems: 'center',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: 840,
   },
 }));
 
 const ActionsLayout = styled(Stack)(({ theme }) => ({
   flexDirection: 'column',
+  alignItems: 'center',
   gap: theme.spacing(2),
   [theme.breakpoints.up('md')]: {
     flexDirection: 'row',
@@ -102,3 +119,4 @@ const ActionsLayout = styled(Stack)(({ theme }) => ({
     justifyContent: 'space-between',
   },
 }));
+

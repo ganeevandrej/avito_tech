@@ -28,3 +28,4 @@ const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   borderRadius: theme.spacing(2),
 }));
+

@@ -3,9 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { AdsGrid } from '@/components/ads/AdsGrid';
-import { AdsPagination } from '@/components/ads/AdsPagination';
-import { BulkActions } from '@/components/ads/BulkActions';
+import { AdsGrid, AdsPagination, BulkActions } from '@/components/ads';
 import { FiltersPanel } from '@/components/filters/FiltersPanel';
 import { fetchAds } from '@/services/api/ads';
 import { filtersFromSearch, filtersToSearch } from '@/shared/utils/filterUrl';
