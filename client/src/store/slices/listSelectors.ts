@@ -16,3 +16,8 @@ export const selectPage = (state: RootState): number => state.list.filters.page;
  * Селектор для получения выбранных ID объявлений
  */
 export const selectSelectedIds = (state: RootState): number[] => state.list.selectedIds;
+
+/**
+ * Селектор режима темы
+ */
+export const selectThemeMode = (state: RootState) => state.theme.mode;
