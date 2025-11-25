@@ -17,6 +17,8 @@ export interface ModerationActionConfig {
   bulkLabel?: string;
   icon: ReactNode;
   color?: ActionColor;
+  hotkey?: string;
+  tooltip?: string;
 }
 
 export const MODERATION_ACTIONS: ModerationActionConfig[] = [
@@ -25,7 +27,9 @@ export const MODERATION_ACTIONS: ModerationActionConfig[] = [
     label: 'Одобрить',
     bulkLabel: 'Одобрить все',
     icon: <CheckIcon />,
-    color: 'success' ,
+    color: 'success',
+    hotkey: 'A',
+    tooltip: 'Нажмите A для одобрения',
   },
   {
     key: 'reject',
@@ -33,6 +37,8 @@ export const MODERATION_ACTIONS: ModerationActionConfig[] = [
     bulkLabel: 'Отклонить все',
     icon: <CloseIcon />,
     color: 'error',
+    hotkey: 'D',
+    tooltip: 'Нажмите D для отклонения',
   },
   {
     key: 'changes',
@@ -40,6 +46,8 @@ export const MODERATION_ACTIONS: ModerationActionConfig[] = [
     bulkLabel: 'На доработку',
     icon: <ReplayIcon />,
     color: 'warning',
+    hotkey: 'S',
+    tooltip: 'Нажмите S для возврата на доработку',
   },
   {
     key: 'clear',

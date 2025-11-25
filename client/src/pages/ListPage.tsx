@@ -1,15 +1,17 @@
 import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AdsGrid } from '@/components/ads/AdsGrid';
 import { AdsPagination } from '@/components/ads/AdsPagination';
 import { BulkActions } from '@/components/ads/BulkActions';
 import { FiltersPanel } from '@/components/filters/FiltersPanel';
 import { fetchAds } from '@/services/api/ads';
+import { filtersFromSearch, filtersToSearch } from '@/shared/utils/filterUrl';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectFilters } from '@/store/slices/listSelectors';
-import { setLastLoadedIds } from '@/store/slices/listSlice';
+import { setFilters, setLastLoadedIds } from '@/store/slices/listSlice';
 import { type AdsListResponse } from '@/types/ad';
 
 /**
@@ -17,7 +19,11 @@ import { type AdsListResponse } from '@/types/ad';
  */
 const ListPage = () => {
   const filters = useAppSelector(selectFilters);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isInitializedFromUrlRef = useRef(false);
 
   const adsQuery = useQuery<AdsListResponse>({
     queryKey: ['ads', filters] as const,
@@ -32,13 +38,65 @@ const ListPage = () => {
     dispatch(setLastLoadedIds(adsQuery.data.ads.map((ad) => ad.id)));
   }, [adsQuery.data, dispatch]);
 
+  // Инициализация фильтров из URL при первом рендере
+  useEffect(() => {
+    if (isInitializedFromUrlRef.current) {
+      return;
+    }
+
+    const parsedFilters = filtersFromSearch(location.search);
+
+    if (parsedFilters) {
+      dispatch(setFilters(parsedFilters));
+    }
+
+    isInitializedFromUrlRef.current = true;
+  }, [dispatch, location.search]);
+
+  // Синхронизация фильтров с URL
+  useEffect(() => {
+    if (!isInitializedFromUrlRef.current) {
+      return;
+    }
+
+    const search = filtersToSearch(filters);
+
+    if (search === location.search) {
+      return;
+    }
+
+    navigate({ search }, { replace: true });
+  }, [filters, location.search, navigate]);
+
+  // Обработка горячих клавишей
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+      // Игнорируем, если пользователь уже вводит текст
+      if (isTyping && event.key !== '/') return;
+
+      // Фокус на поиск при нажатии "/"
+      if (event.key === '/') {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const shouldShowPagination =
     Boolean(adsQuery.data?.pagination) && adsQuery.data!.pagination.totalPages > 1;
 
   return (
     <Stack spacing={3}>
       {/* Фильтры */}
-      <FiltersPanel />
+      <FiltersPanel searchInputRef={searchInputRef} />
 
       {/* Список объявлений */}
       <AdsGrid

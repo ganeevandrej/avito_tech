@@ -1,18 +1,20 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppSelector } from '@/store/hooks';
 
 import { ModerationButtons } from './ModerationButtons';
+import type { ModerationActionsRef } from './useModerationActions';
 
 interface IProps {
   adId: number;
+  actionsRef?: React.RefObject<ModerationActionsRef | null>;
 }
 
-export const ModerationActions = ({ adId }: IProps) => {
+export const ModerationActions = ({ adId, actionsRef }: IProps) => {
   const navigate = useNavigate();
   const lastLoadedIds = useAppSelector((state) => state.list.lastLoadedIds);
 
@@ -27,10 +29,24 @@ export const ModerationActions = ({ adId }: IProps) => {
     return { prevId: prev, nextId: next };
   }, [adId, lastLoadedIds]);
 
-  const handleNavigate = (targetId: number | null) => {
-    if (!targetId) return;
-    navigate(`/item/${targetId}`);
-  };
+  const handleNavigate = useCallback(
+    (targetId: number | null) => {
+      if (!targetId) return;
+      navigate(`/item/${targetId}`);
+    },
+    [navigate],
+  );
+
+  // Устанавливаем функции через ref для горячих клавиш
+  useEffect(() => {
+    if (!actionsRef) return;
+
+    actionsRef.current = {
+      ...(actionsRef.current ?? {}),
+      ...(prevId && { goToPrev: () => handleNavigate(prevId) }),
+      ...(nextId && { goToNext: () => handleNavigate(nextId) }),
+    };
+  }, [actionsRef, handleNavigate, nextId, prevId]);
 
   return (
     <StickyCard>
@@ -43,7 +59,7 @@ export const ModerationActions = ({ adId }: IProps) => {
         >
           К списку
         </Button>
-        <ModerationButtons adId={adId} />
+        <ModerationButtons adId={adId} actionsRef={actionsRef} />
         <Stack direction="row" spacing={1} alignItems="center">
           <Button
             variant="text"

@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import listReducer from './slices/listSlice';
+import themeReducer from './slices/themeSlice';
 
 export const store = configureStore({
   reducer: {
     list: listReducer,
+    theme: themeReducer,
   },
   devTools: true,
 });

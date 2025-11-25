@@ -8,10 +8,14 @@ import { SortFilter } from './SortFilter';
 import { StatusFilter } from './StatusFilter';
 import { useFiltersHandlers } from './useFiltersHandlers';
 
+interface IProps {
+  searchInputRef?: React.RefObject<HTMLInputElement | null>;
+}
+
 /**
  * Компонент панели фильтров
  */
-export const FiltersPanel = () => {
+export const FiltersPanel = ({ searchInputRef }: IProps) => {
   const {
     filters,
     searchValue,
@@ -31,7 +35,7 @@ export const FiltersPanel = () => {
         <Stack spacing={2}>
           {/* Поиск и сортировка */}
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <SearchFilter value={searchValue} onChange={setSearchValue} />
+            <SearchFilter value={searchValue} onChange={setSearchValue} inputRef={searchInputRef} />
             <SortFilter
               sortBy={filters.sortBy}
               sortOrder={filters.sortOrder}

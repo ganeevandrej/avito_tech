@@ -6,6 +6,14 @@ import type { DialogMode } from '@/shared/constants/moderationActions';
 
 export type ModerationButtonActionKey = 'approve' | 'reject' | 'changes';
 
+export interface ModerationActionsRef {
+  handleApprove?: () => void;
+  handleReject?: () => void;
+  handleRequestChanges?: () => void;
+  goToPrev?: () => void;
+  goToNext?: () => void;
+}
+
 interface ActionState {
   handler: () => void;
   disabled: boolean;
