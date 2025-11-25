@@ -1,23 +1,37 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 
 import { approveAd, rejectAd, requestChanges } from '@/services/api/ads';
+import type { DialogMode } from '@/shared/constants/moderationActions';
+
+export type ModerationButtonActionKey = 'approve' | 'reject' | 'changes';
+
+interface ActionState {
+  handler: () => void;
+  disabled: boolean;
+}
 
 export interface ModerationPayload {
   reason: string;
   comment?: string;
 }
 
-interface UseModerationActionsResult {
-  handleApprove: () => void;
-  handleReject: (payload: ModerationPayload) => void;
-  handleRequestChanges: (payload: ModerationPayload) => void;
-  isApproving: boolean;
-  isRejecting: boolean;
-  isRequestingChanges: boolean;
+export interface UseModerationActionsOptions {
+  onOpenDialog?: (mode: DialogMode) => void;
 }
 
-export const useModerationActions = (adId: number): UseModerationActionsResult => {
+interface UseModerationActionsResult {
+  actionStateMap: Record<ModerationButtonActionKey, ActionState>;
+  handleReject: (payload: ModerationPayload) => void;
+  handleRequestChanges: (payload: ModerationPayload) => void;
+}
+
+export const useModerationActions = (
+  adId: number,
+  options?: UseModerationActionsOptions,
+): UseModerationActionsResult => {
   const queryClient = useQueryClient();
+  const { onOpenDialog } = options ?? {};
 
   /**
    * сбрасывает кэш списка объявлений и детальной информации об объявлении
@@ -56,10 +70,9 @@ export const useModerationActions = (adId: number): UseModerationActionsResult =
   /**
    * обработка одобрения объявления
    */
-  const handleApprove = () => {
+  const handleApprove = useCallback(() => {
     approveMutation.mutate();
-  };
-
+  }, [approveMutation]);
   /**
    * обработка отклонения объявления
    */
@@ -74,13 +87,37 @@ export const useModerationActions = (adId: number): UseModerationActionsResult =
     changesMutation.mutate(payload);
   };
 
+  /**
+   * состояние кнопок модерации
+   */
+  const actionStateMap = useMemo(
+    () => ({
+      approve: {
+        handler: handleApprove,
+        disabled: approveMutation.isPending,
+      },
+      reject: {
+        handler: () => onOpenDialog?.('reject'),
+        disabled: rejectMutation.isPending,
+      },
+      changes: {
+        handler: () => onOpenDialog?.('changes'),
+        disabled: changesMutation.isPending,
+      },
+    }),
+    [
+      approveMutation.isPending,
+      changesMutation.isPending,
+      handleApprove,
+      onOpenDialog,
+      rejectMutation.isPending,
+    ],
+  );
+
   return {
-    handleApprove,
+    actionStateMap,
     handleReject,
     handleRequestChanges,
-    isApproving: approveMutation.isPending,
-    isRejecting: rejectMutation.isPending,
-    isRequestingChanges: changesMutation.isPending,
   };
 };
 

@@ -4,16 +4,19 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
   MenuItem,
+  Select,
+  type SelectChangeEvent,
   Stack,
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
 
+import type { ModerationPayload } from '@/components/item/useModerationActions';
 import { MODERATION_REASONS } from '@/shared/constants/moderation';
-
-import type { DialogMode } from './ModerationButtons';
-import type { ModerationPayload } from './useModerationActions';
+import type { DialogMode } from '@/shared/constants/moderationActions';
 
 interface IProps {
   open: boolean;
@@ -25,6 +28,10 @@ interface IProps {
 export const ModerationReasonDialog = ({ mode, open, onClose, onSubmit }: IProps) => {
   const [reason, setReason] = useState(MODERATION_REASONS[0]);
   const [comment, setComment] = useState('');
+
+  if (!mode) {
+    return null;
+  }
 
   const title = mode === 'reject' ? 'Отклонить объявление' : 'Вернуть на доработку';
   const submitLabel = mode === 'reject' ? 'Отклонить' : 'Вернуть';
@@ -47,23 +54,30 @@ export const ModerationReasonDialog = ({ mode, open, onClose, onSubmit }: IProps
     handleClose();
   };
 
+  const handleReasonChange = (event: SelectChangeEvent<string>) => {
+    setReason(event.target.value);
+  };
+
   return (
     <Dialog key={`${mode}-${open}`} open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Stack spacing={2} mt={1}>
-          <TextField
-            select
-            label="Причина"
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-          >
-            {MODERATION_REASONS.map((item) => (
-              <MenuItem key={item} value={item}>
-                {item}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl fullWidth>
+            <InputLabel id="moderation-reason-label">Причина</InputLabel>
+            <Select
+              labelId="moderation-reason-label"
+              label="Причина"
+              value={reason}
+              onChange={handleReasonChange}
+            >
+              {MODERATION_REASONS.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             label="Комментарий"
             multiline
@@ -83,3 +97,5 @@ export const ModerationReasonDialog = ({ mode, open, onClose, onSubmit }: IProps
     </Dialog>
   );
 };
+
+
