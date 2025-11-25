@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { AdsGrid } from '@/components/ads/AdsGrid';
 import { AdsPagination } from '@/components/ads/AdsPagination';
@@ -17,6 +17,8 @@ import { type AdsListResponse } from '@/types/ad';
  */
 const ListPage = () => {
   const filters = useAppSelector(selectFilters);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
   const dispatch = useAppDispatch();
 
   const adsQuery = useQuery<AdsListResponse>({
@@ -32,13 +34,35 @@ const ListPage = () => {
     dispatch(setLastLoadedIds(adsQuery.data.ads.map((ad) => ad.id)));
   }, [adsQuery.data, dispatch]);
 
+  // Обработка горячих клавишей
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+      // Игнорируем, если пользователь уже вводит текст
+      if (isTyping && event.key !== '/') return;
+
+      // Фокус на поиск при нажатии "/"
+      if (event.key === '/') {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const shouldShowPagination =
     Boolean(adsQuery.data?.pagination) && adsQuery.data!.pagination.totalPages > 1;
 
   return (
     <Stack spacing={3}>
       {/* Фильтры */}
-      <FiltersPanel />
+      <FiltersPanel searchInputRef={searchInputRef} />
 
       {/* Список объявлений */}
       <AdsGrid
